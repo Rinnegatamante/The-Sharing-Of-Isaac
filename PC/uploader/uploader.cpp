@@ -8,9 +8,16 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include "tinyxml2.h"
 
 #define u32 uint32_t
+using namespace tinyxml2;
 
+struct config{
+	char id[13];
+	char psw[13];
+	char host[32];
+};
 typedef struct
 {
 	u32 sock;
@@ -27,12 +34,34 @@ int sendData(int socket, int sendsize, char *buffer) {
    return sendsize <= 0;
 }
 
+void loadConfig(config* cfg, char* path)
+{
+	
+	// Loading XML file
+	XMLDocument doc;
+	doc.LoadFile(path);
+	
+	// Getting elements
+	XMLElement* id = doc.FirstChildElement("id");
+	const char* tmp = id->GetText();
+	strcpy(cfg->id, tmp);
+	XMLElement* psw = doc.FirstChildElement("password");
+	const char* tmp2 = psw->GetText();
+	strcpy(cfg->psw, tmp2);
+	XMLElement* host = doc.FirstChildElement("host");
+	const char* tmp3 = host->GetText();
+	strcpy(cfg->host, tmp3);
+	
+}
+
 int main(int argc,char** argv){
 
-	// Getting args
-	char* host = (char*)(argv[1]);
-	char* id = (char*)(argv[2]);
-	char* pass = (char*)(argv[3]);
+	// Loading config file
+	config settings;
+	loadConfig(&settings, "./TSOI.cfg");
+	char* host = settings.host;
+	char* id = settings.id;
+	char* pass = settings.psw;
 	
 	// Creating client socket
 	Socket* my_socket = (Socket*) malloc(sizeof(Socket));
@@ -78,7 +107,7 @@ int main(int argc,char** argv){
 	
 	// Building payload
 	int payload_size = file_size + strlen(id) + strlen(pass) + 289;
-	uint8_t* payload = malloc(payload_size);	
+	uint8_t* payload = (uint8_t*)malloc(payload_size);	
 	char block1[128];
 	char block2[128];
 	char block3[128];
@@ -151,7 +180,7 @@ int main(int argc,char** argv){
 				 "boundary=----startContent\r\n\r\n", payload_size);
 	
 	// Creating TCP packet
-	uint8_t* packet = malloc(payload_size + strlen(header));
+	uint8_t* packet = (uint8_t*)malloc(payload_size + strlen(header));
 	memcpy(packet, header, strlen(header));
 	memcpy(&packet[strlen(header)], payload, payload_size);
 	free(payload);
