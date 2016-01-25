@@ -8,8 +8,10 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include "tinyxml2.h"
 
 #define u32 uint32_t
+using namespace tinyxml2;
 
 typedef struct
 {
@@ -17,22 +19,39 @@ typedef struct
 	struct sockaddr_in addrTo;
 } Socket;
 
-int sendData(int socket, int sendsize, char *buffer) {
-   while(sendsize) {
-      int len = send(socket, buffer, sendsize, 0);
-      if (len <= 0) break;
-      sendsize -= len;
-      buffer += len;
-   }
-   return sendsize <= 0;
+struct config{
+	char id[13];
+	char psw[13];
+	char host[32];
+};
+
+void loadConfig(config* cfg, char* path)
+{
+	
+	// Loading XML file
+	XMLDocument doc;
+	doc.LoadFile(path);
+	
+	// Getting elements
+	XMLElement* id = doc.FirstChildElement("id");
+	const char* tmp = id->GetText();
+	strcpy(cfg->id, tmp);
+	XMLElement* psw = doc.FirstChildElement("password");
+	const char* tmp2 = psw->GetText();
+	strcpy(cfg->psw, tmp2);
+	XMLElement* host = doc.FirstChildElement("host");
+	const char* tmp3 = host->GetText();
+	strcpy(cfg->host, tmp3);
+	
 }
 
 int main(int argc,char** argv){
 
-	// Getting args
-	char* host = (char*)(argv[1]);
-	char* id = (char*)(argv[2]);
-	char* pass = (char*)(argv[3]);
+	// Loading config file
+	config settings;
+	loadConfig(&settings, "./TSOI.cfg");
+	char* host = settings.host;
+	char* id = settings.id;
 	
 	// Creating client socket
 	Socket* my_socket = (Socket*) malloc(sizeof(Socket));
@@ -71,12 +90,15 @@ int main(int argc,char** argv){
 	while (bytesReceived == 0){
 		bytesReceived = recv(my_socket->sock, &response, 1024*1024, 0);
 	}	
-	
+	printf(response);
 	// Getting savegame size
-	int c1 = response[179] - '0';
-	int c2 = response[180] - '0';
-	int c3 = response[181] - '0';
-	int c4 = response[182] - '0';
+	char* raw_offs = strstr(response, "Content-Length");
+	int offs = raw_offs - response;
+	offs = offs + 16;
+	int c1 = response[offs++] - '0';
+	int c2 = response[offs++] - '0';
+	int c3 = response[offs++] - '0';
+	int c4 = response[offs++] - '0';
 	int length = c4 + c3 * 10 + c2 * 100 + c1 * 1000;
 	printf(" Done!\n");
 	
@@ -85,23 +107,24 @@ int main(int argc,char** argv){
 	printf("Updating local savegame ...");
 	fflush(stdout);
 	FILE* output = fopen("persistentgamedata1.dat","wb");
-	if (output < 0){
-		printf("\nFile not found.");
-		fflush(stdout);
-		close(my_socket->sock);
-		return -1;
-	}
 	fwrite(&response[file_offset], length, 1, output);
 	printf(" Done! (%i KBs)\n\n",(length/1024));
 	fclose(output);
-	printf("Press ENTER to exit!");
+	printf("Press ENTER to start The Binding of Isaac: Rebirth!");
 	fflush(stdout);
 	
 	// Closing connection
 	close(my_socket->sock);
 	
-	// Waiting input
+	// Waiting input and launching game
 	while (getchar() == 0){}
+	#ifdef linux // linux
+		system("xdg-open steam://rungameid/250900");
+	#elif defined(__CYGWIN__) // win
+		system("cygstart steam://rungameid/250900");
+	#else // mac
+		system("open steam://rungameid/250900");
+	#endif
 	return 1;
 	
 }
