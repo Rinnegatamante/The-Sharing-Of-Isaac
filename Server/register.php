@@ -2,19 +2,24 @@
 <title>The Sharing of Isaac - Registration</title>
 <head>
 </head>
-<body background="wall.jpg">
 <style>
 table {
 	border-radius: 5px;
 	margin: 8px;
 }
+body {
+    background-image:    url(wall.jpg);
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+}
 </style>
+<body>
 <?php
 
 /* Configuration*/
-$host_db='HOST';
+$host_db='DATABASE';
 $Login_db='LOGIN';
-$pwd_db='PASSWORD';
+$pwd_db='PASS';
 $bdd_name='TABLE';
 /* end of Configuration */
 
@@ -40,7 +45,34 @@ if(isset($_POST['Login'])){
 			}else{
 				if(mysql_query("INSERT INTO `$Login_db`.`$bdd_name` (`id` , `password` ,`email`)
 									VALUES ('$Login', PASSWORD('$password'), '$email');")){
-					echo("<font face='Verdana' color='black'>$Login user created successfully!");
+					echo("<font face='Verdana' color='black'>Welcome on <b>The Sharing of Isaac</b>, $Login!<br>");
+?>
+	<br><font size=4 color = red>Get Started (Windows)</font><br><br>
+	<font size=2>
+	First of all download the Starter Kit from this link: <a href="http://adf.ly/1VsDp8">Starter Kit v.0.1</a>.<br><br>
+	Then you must create a file named as <b>TSOI.cfg</b> (you'll need also a duplicate, one for 3DS and another for PC) with this text inside:<br><br>
+	</font>
+	<?
+	$host = gethostbyname('www.rinnegatamante.it');
+	echo "<textarea name='xml' cols='40' rows='3' >
+<id>$Login</id>
+<password>$password</password>
+<host>$host</host>
+	</textarea>";
+	?><br><br><font size=4 color = red>PC Setup</font><br><br><font size=2>
+	Place the <b>content of PC folder</b> and a <b>TSOI.cfg</b> file in the folder where TBOI: Rebirth saves your files on Steam (Usually it is something like: <b>C:\Program Files (x86)\Steam\userdata\YOUR_ID\250900\remote</b>) like in <a href="setup1.png">THIS SCREENSHOT</a>.<br><br>
+	I suggest you to create two shortcuts and place them in a comfortable place (Desktop or similars), one for <b>uploader.exe</b> and one for <b>downloader.exe</b> to use TSOI rapidly.
+	</font><br><br><font size=4 color = red>N3DS Setup</font><br><br><font size=2>
+	Place the <b>content of N3DS folder</b> in <b>/3ds/TSOI</b> and place a <b>TSOI.cfg</b> in the root of your microSD card like in <a href="setup2.png">THIS SCREENSHOT</a>.<br>
+	You'll need also to install <b>hblauncher_loader</b> by <b>Yellows8</b> through whatever CIA Installer you want. (<a href="https://github.com/yellows8/hblauncher_loader/releases">Download hblauncher_loader</a>)<br>
+	Make also sure to possess a <b>crypto-fixed</b> CIA of the game installed.
+	</font><br><br><font size=4 color = red>How to use (PC)</font><br><br><font size=2>
+	When you want to <b>update</b> the savegame in the server, just start <b>uploader.exe shortcut</b>.<br>
+	When you want to <b>play TBOI: RE with LATEST savegame in the server</b>, just start <b>downloader.exe shortcut</b>. It will also start the game automatically after updating local savegame.<br>
+	</font><br><br><font size=4 color = red>How to use (N3DS)</font><br><br><font size=2>
+	When you want to <b>update</b> the local or the server savegame, start <b>hbauncher_loader</b> from emuNand.<br>
+	Then launch <b>The Sharing of Isaac</b> and follow the instructions on the screen according to what you want to do.<br>
+	</font><?
 				}else{
 					echo "<font face='Verdana' color='black'>$Login already exists! </font><a href=\"javascript:history.back();\"><font face='Verdana' color='black'>Go Back!</font></a>";
 				}
@@ -103,13 +135,8 @@ if(isset($_POST['Login'])){
 }
 </style>
 <div id="footer" align="center">
-<center><table cellpadding='5' cellspacing='1' border='2' bordercolor=#2F4E50 bordercolorlight=#2F4E50 bordercolordark=#2F4E50 bgcolor=#FFFFFF align='center'>
-<tr><td><font color=red><center><b>Server Data</b></center></font></td></tr>
-<tr><td>Server Address: <? echo gethostbyname('www.rinnegatamante.it'); ?></font></td></tr>
-<tr><td>Host Address: rinnegatamante.it</font></td></tr>
-</table><br>
 <embed src="bgm.mp3" autostart="true" loop="true"
-width="200" height="16"></center><br>
+width="2" height="0"><br>
 </div>
 </embed> 
 </html>
