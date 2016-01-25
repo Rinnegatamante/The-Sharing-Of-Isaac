@@ -160,11 +160,24 @@ int main(int argc,char** argv){
 	printf("\nUploading savegame ...");
 	fflush(stdout);	
 	send(my_socket->sock, packet, payload_size + strlen(header), 0);
-	printf("Done!");
 	
+	// Receiving response
+	int bytesReceived = 0;
+	char response[1024];
+	while (bytesReceived == 0){
+		bytesReceived = recv(my_socket->sock, &response, 1024, 0);
+	}	
+	if (response[strlen(response)-1] == '0') printf(" ERROR!\nAn error occurred!");
+	else printf(" Done!");
+	printf("\n\nPress ENTER to exit!");
 	fflush(stdout);
+	
+	// Closing connection
 	close(my_socket->sock);
 	free(packet);
+	
+	// Waiting input
+	while (getchar() == 0){}
 	return 1;
 	
 }
