@@ -90,7 +90,7 @@ int main(int argc,char** argv){
 	while (bytesReceived == 0){
 		bytesReceived = recv(my_socket->sock, &response, 1024*1024, 0);
 	}	
-	printf(response);
+
 	// Getting savegame size
 	char* raw_offs = strstr(response, "Content-Length");
 	int offs = raw_offs - response;
