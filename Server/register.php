@@ -25,17 +25,20 @@ $bdd_name='TABLE';
 
 if(isset($_POST['Login'])){
 
-	/* Data submit*/
-	$Login=$_POST['Login'];
-	$password=$_POST['password'];
-	$password2=$_POST['password2'];
-	$email=$_POST['email'];
-	/* end of Data submit*/
-
 	mysql_connect($host_db,$Login_db,$pwd_db);
 	
-	echo "<center><img src='logo.png'><br><br><table cellpadding='5' cellspacing='1' border='1' bordercolor=#2F4E50 bordercolorlight=#2F4E50 bordercolordark=#2F4E50 bgcolor=#FFFFFF align='center'><tr><td>";
+	/* Data submit*/
+	$Login=$_POST['Login'];
+	$Login2=addslashes($_POST['Login']);
+	$password=$_POST['password'];
+	$password2=$_POST['password2'];
+	$password3=addslashes($_POST['password']);
+	$email=$_POST['email'];
+	$email2=addslashes($_POST['email']);
+	/* end of Data submit*/
 	
+	echo "<center><img src='logo.png'><br><br><table cellpadding='5' cellspacing='1' border='1' bordercolor=#2F4E50 bordercolorlight=#2F4E50 bordercolordark=#2F4E50 bgcolor=#FFFFFF align='center'><tr><td>";
+	if ((strcmp($Login, $Login2) == 0) and (strcmp($password, $password3) == 0) and (strcmp($email, $email2) == 0)){
 	if ($password==$password2){
 		if (strlen($password)>1 and strlen($password)<11 and strlen($Login)>1 and strlen($Login)<13 and strlen($email)<30 ){
 			$result=mysql_query("select id from `$Login_db`.`$bdd_name` where id='$Login'");
@@ -47,9 +50,9 @@ if(isset($_POST['Login'])){
 									VALUES ('$Login', PASSWORD('$password'), '$email');")){
 					echo("<font face='Verdana' color='black'>Welcome on <b>The Sharing of Isaac</b>, $Login!<br>");
 ?>
-	<br><font size=4 color = red>Get Started (Windows)</font><br><br>
+	<br><font size=4 color = red>Get Started (Windows Tutorial)</font><br><br>
 	<font size=2>
-	First of all download the Starter Kit from this link: <a href="http://adf.ly/1VsDp8">Starter Kit v.0.1</a>.<br><br>
+	First of all download the Starter Kit from this link: <a href="http://adf.ly/1VsDp8">Starter Kit v.0.1 BETA</a>.<br><br>
 	Then you must create a file named as <b>TSOI.cfg</b> (you'll need also a duplicate, one for 3DS and another for PC) with this text inside:<br><br>
 	</font>
 	<?
@@ -60,7 +63,7 @@ if(isset($_POST['Login'])){
 <host>$host</host>
 	</textarea>";
 	?><br><br><font size=4 color = red>PC Setup</font><br><br><font size=2>
-	Place the <b>content of PC folder</b> and a <b>TSOI.cfg</b> file in the folder where TBOI: Rebirth saves your files on Steam (Usually it is something like: <b>C:\Program Files (x86)\Steam\userdata\YOUR_ID\250900\remote</b>) like in <a href="setup1.png">THIS SCREENSHOT</a>.<br><br>
+	Place the <b>content of "PC/Windows 64 Bit" folder</b> and a <b>TSOI.cfg</b> file in the folder where TBOI: Rebirth saves your files on Steam (Usually it is something like: <b>C:\Program Files (x86)\Steam\userdata\YOUR_ID\250900\remote</b>) like in <a href="setup1.png">THIS SCREENSHOT</a>.<br><br>
 	I suggest you to create two shortcuts and place them in a comfortable place (Desktop or similars), one for <b>uploader.exe</b> and one for <b>downloader.exe</b> to use TSOI rapidly.
 	</font><br><br><font size=4 color = red>N3DS Setup</font><br><br><font size=2>
 	Place the <b>content of N3DS folder</b> in <b>/3ds/TSOI</b> and place a <b>TSOI.cfg</b> in the root of your microSD card like in <a href="setup2.png">THIS SCREENSHOT</a>.<br>
@@ -82,6 +85,9 @@ if(isset($_POST['Login'])){
 		}
 	}else{
 		echo "<font face='Verdana' color='black'>Wrong password!</font> <a href=\"javascript:history.back();\"><font face='Verdana' color='black'>Go Back!</font></a>";
+	}
+	}else{
+		echo "Nice try, little cracker.";
 	}
 	
 	echo "</td></tr></table>";
