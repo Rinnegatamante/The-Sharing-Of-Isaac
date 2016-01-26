@@ -64,7 +64,8 @@ if(isset($_POST['Login'])){
 	</textarea>";
 	?><br><br><font size=4 color = red>PC Setup</font><br><br><font size=2>
 	Place the <b>content of "PC/Windows 64 Bit" folder</b> and a <b>TSOI.cfg</b> file in the folder where TBOI: Rebirth saves your files on Steam (Usually it is something like: <b>C:\Program Files (x86)\Steam\userdata\YOUR_ID\250900\remote</b>) like in <a href="setup1.png">THIS SCREENSHOT</a>.<br><br>
-	I suggest you to create two shortcuts and place them in a comfortable place (Desktop or similars), one for <b>uploader.exe</b> and one for <b>downloader.exe</b> to use TSOI rapidly.
+	I suggest you to create two shortcuts and place them in a comfortable place (Desktop or similars), one for <b>uploader.exe</b> and one for <b>downloader.exe</b> to use TSOI rapidly.<br>
+	Be sure to have also Steam Cloud <b>DISABLED</b>. To disable it, just right-click on TBOI: Rebirth in your Steam Library, click on <b>Properties</b>, go to <b>Updates</b> tab and disable the <b>Steam Cloud</b> option.
 	</font><br><br><font size=4 color = red>N3DS Setup</font><br><br><font size=2>
 	Place the <b>content of N3DS folder</b> in <b>/3ds/TSOI</b> and place a <b>TSOI.cfg</b> in the root of your microSD card like in <a href="setup2.png">THIS SCREENSHOT</a>.<br>
 	You'll need also to install <b>hblauncher_loader</b> by <b>Yellows8</b> through whatever CIA Installer you want. (<a href="https://github.com/yellows8/hblauncher_loader/releases">Download hblauncher_loader</a>)<br>
